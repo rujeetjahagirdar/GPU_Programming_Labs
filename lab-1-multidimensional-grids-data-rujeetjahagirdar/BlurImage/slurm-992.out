@@ -1,0 +1,27 @@
+mkdir -p build/src
+g++ -std=c++11 -I/home/rxj7347/assignments/lab-1-multidimensional-grids-data-rujeetjahagirdar/BlurImage/../lib/libgputk -I/usr/include/opencv4 -I/home/rxj7347/assignments/lab-1-multidimensional-grids-data-rujeetjahagirdar/BlurImage/../lib/libgputk -g -c src/dataset_generator.cpp -o build/src/dataset_generator.cpp.o
+g++ -std=c++11 -I/home/rxj7347/assignments/lab-1-multidimensional-grids-data-rujeetjahagirdar/BlurImage/../lib/libgputk -I/usr/include/opencv4 -I/home/rxj7347/assignments/lab-1-multidimensional-grids-data-rujeetjahagirdar/BlurImage/../lib/libgputk -g -c src/blur_cpu.cpp -o build/src/blur_cpu.cpp.o
+g++ -std=c++11 -I/home/rxj7347/assignments/lab-1-multidimensional-grids-data-rujeetjahagirdar/BlurImage/../lib/libgputk -I/usr/include/opencv4 -o build/datagen build/src/dataset_generator.cpp.o build/src/blur_cpu.cpp.o -lm -L/home/rxj7347/assignments/lab-1-multidimensional-grids-data-rujeetjahagirdar/BlurImage/../lib/libgputk/lib -lgputk
+g++ -std=c++11 -I/home/rxj7347/assignments/lab-1-multidimensional-grids-data-rujeetjahagirdar/BlurImage/../lib/libgputk -I/usr/include/opencv4 -c src/main_test.cpp -o build/main_test.o
+nvcc -I/home/rxj7347/assignments/lab-1-multidimensional-grids-data-rujeetjahagirdar/BlurImage/../lib/libgputk -c src/blur_gpu.cu -o build/src/blur_gpu.cu.o
+nvcc -I/home/rxj7347/assignments/lab-1-multidimensional-grids-data-rujeetjahagirdar/BlurImage/../lib/libgputk -o build/main_test build/main_test.o build/src/blur_cpu.cpp.o build/src/blur_gpu.cu.o -lm -L/home/rxj7347/assignments/lab-1-multidimensional-grids-data-rujeetjahagirdar/BlurImage/../lib/libgputk/lib -lgputk
+Running test for directory 0
+Solution is correct
+Running test for directory 1
+Solution is correct
+Running test for directory 2
+Solution is correct
+Running test for directory 3
+Solution is correct
+Running test for directory 4
+Solution is correct
+Running test for directory 5
+Solution is correct
+Running test for directory 6
+Solution is correct
+Running test for directory 7
+Solution is correct
+Running test for directory 8
+Solution is correct
+Running test for directory 9
+Solution is correct

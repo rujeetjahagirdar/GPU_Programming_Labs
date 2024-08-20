@@ -1,0 +1,93 @@
+#include "conv2d_gpu.h"
+#define FILTER_RADIUS 2
+#define IN_TILE_DIM 4
+#define OUT_TILE_DIM ((IN_TILE_DIM) - 2*(FILTER_RADIUS))
+
+__device__ __constant__ float kFilter_constant[5][5];
+
+__global__ void convolve2D_constant_kernel(
+    const float* input, 
+    const float* kernel, 
+    float* output, 
+    int inputWidth, int inputHeight, 
+    int kernelSize, int outputWidth, int outputHeight, 
+    int stride, int dilation) {
+
+    __shared__ float inputTile[IN_TILE_DIM][IN_TILE_DIM];
+    
+    int col = blockIdx.x * OUT_TILE_DIM + threadIdx.x;
+    int row = blockIdx.y * OUT_TILE_DIM + threadIdx.y;
+
+    if(row<inputHeight && col < inputWidth) {
+	inputTile[threadIdx.y][threadIdx.x] = input[row * inputWidth + col];
+    } else {
+	inputTile[threadIdx.y][threadIdx.x] = 0.0f;
+    }
+    __syncthreads();
+
+    int tileCol = threadIdx.x - FILTER_RADIUS;
+    int tileRow = threadIdx.y - FILTER_RADIUS;
+
+    row = row - FILTER_RADIUS;
+    col = col - FILTER_RADIUS;
+    if(tileCol >= 0 && tileCol < OUT_TILE_DIM && tileRow >=0 && tileRow < OUT_TILE_DIM) {
+	float sum = 0.0f;
+	for(int fRow = 0; fRow < 2*FILTER_RADIUS+1; fRow++){
+		for(int fCol =0; fCol<2*FILTER_RADIUS+1; fCol++) {
+			sum = sum + inputTile[tileRow * fRow][tileCol + fCol] * kFilter_constant[fRow][fCol];
+		}
+    	}
+	output[row * (inputWidth-2 * FILTER_RADIUS) + col] = sum;
+	printf("\nSum= %f\n",sum);
+    }
+
+}
+
+
+void convolve2D(
+    const float *input,
+    const float *kernel,
+    float *output,
+    unsigned int inputHeight,
+    unsigned int inputWidth,
+    unsigned int kernelSize,
+    unsigned int outputHeight,
+    unsigned int outputWidth,
+    unsigned int padding,
+    unsigned int stride,
+    unsigned int dilation) {
+
+    // Allocate device memory
+    float *deviceInput, *deviceKernel, *deviceOutput;
+
+    // TODO: Complete host function.
+    cudaMalloc((void **)&deviceInput, inputHeight * inputWidth * sizeof(float));
+    cudaMalloc((void **)&deviceKernel, kernelSize * kernelSize * sizeof(float));
+    cudaMalloc((void **)&deviceOutput, outputHeight * outputWidth * sizeof(float));
+
+    // Copy data to device
+    cudaMemcpy(deviceInput, input, inputHeight * inputWidth * sizeof(float), cudaMemcpyHostToDevice);
+    cudaMemcpy(deviceKernel, kernel, kernelSize * kernelSize * sizeof(float), cudaMemcpyHostToDevice);
+    cudaMemcpyToSymbol(kFilter_constant, kernel, (kernelSize)*(kernelSize)*sizeof(float));
+    cudaDeviceSynchronize();
+    // Execute the kernel
+    dim3 dimBlock(16, 16);
+    dim3 dimGrid((outputWidth + dimBlock.x - 1) / dimBlock.x,
+                 (outputHeight + dimBlock.y - 1) / dimBlock.y);
+    convolve2D_constant_kernel<<<dimGrid, dimBlock>>>(deviceInput, deviceKernel, deviceOutput, inputWidth, inputHeight, kernelSize, outputWidth, outputHeight,stride, dilation);
+////    convolve2D_shared_kernel<<<dimGrid, dimBlock>>>(deviceInput, deviceKernel, deviceOutput, inputWidth, inputHeight, kernelSize, outputWidth, outputHeight,stride, dilation);
+    gpuErrchk(cudaDeviceSynchronize());
+
+    // Copy data back to host
+    gpuErrchk(cudaMemcpy(output, deviceOutput,
+                          outputHeight * outputWidth * sizeof(float),
+                          cudaMemcpyDeviceToHost));
+
+    // Free memory
+    cudaFree(deviceInput);
+    cudaFree(deviceKernel);
+    cudaFree(deviceOutput);
+
+
+
+}

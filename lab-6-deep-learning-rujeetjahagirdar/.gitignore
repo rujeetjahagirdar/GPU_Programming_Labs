@@ -1,0 +1,10 @@
+*.i
+*.ii
+*.gpu
+*.ptx
+*.cubin
+*.fatbin
+*.idx3-ubyte
+*.idx1-ubyte
+bin/*
+obj/*

@@ -1,0 +1,45 @@
+Running test for directory 0
+The dimensions of A are 16 x 16
+The dimensions of B are 16 x 16
+The dimensions of C are 16 x 16
+Solution is correct
+Running test for directory 1
+The dimensions of A are 64 x 64
+The dimensions of B are 64 x 64
+The dimensions of C are 64 x 64
+Solution is correct
+Running test for directory 2
+The dimensions of A are 64 x 128
+The dimensions of B are 128 x 64
+The dimensions of C are 64 x 64
+Solution is NOT correct
+Running test for directory 3
+The dimensions of A are 112 x 48
+The dimensions of B are 48 x 16
+The dimensions of C are 112 x 16
+Solution is NOT correct
+Running test for directory 4
+The dimensions of A are 84 x 84
+The dimensions of B are 84 x 84
+The dimensions of C are 84 x 84
+Solution is correct
+Running test for directory 5
+The dimensions of A are 80 x 99
+The dimensions of B are 99 x 128
+The dimensions of C are 80 x 128
+Solution is NOT correct
+Running test for directory 6
+The dimensions of A are 67 x 53
+The dimensions of B are 53 x 64
+The dimensions of C are 67 x 64
+Solution is NOT correct
+Running test for directory 7
+The dimensions of A are 29 x 117
+The dimensions of B are 117 x 85
+The dimensions of C are 29 x 85
+Solution is NOT correct
+Running test for directory 8
+The dimensions of A are 191 x 19
+The dimensions of B are 19 x 241
+The dimensions of C are 191 x 241
+Solution is NOT correct

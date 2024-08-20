@@ -1,0 +1,3 @@
+make: Nothing to be done for 'datagen'.
+nvcc -I /home/rxj7347/assignments/lab-2-tiling-and-thread-coarsening-rujeetjahagirdar/TiledMatMul/../lib/libgputk -c src/tiled_matmul.cu -o build/src/tiled_matmul.cu.o
+slurmstepd-cpe-gpu: error: *** JOB 1375 ON cpe-gpu CANCELLED AT 2024-02-21T19:06:07 DUE TO TIME LIMIT ***

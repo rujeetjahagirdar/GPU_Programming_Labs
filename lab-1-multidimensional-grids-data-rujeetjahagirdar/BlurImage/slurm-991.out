@@ -1,0 +1,2 @@
+g++ -std=c++11 -I/home/rxj7347/assignments/lab-1-multidimensional-grids-data-rujeetjahagirdar/BlurImage/../lib/libgputk -I/usr/include/opencv4 -c src/main.cpp -o build/main.o
+nvcc -I/home/rxj7347/assignments/lab-1-multidimensional-grids-data-rujeetjahagirdar/BlurImage/../lib/libgputk -o build/main build/main.o build/src/blur_cpu.cpp.o build/src/blur_gpu.cu.o -lm -L/home/rxj7347/assignments/lab-1-multidimensional-grids-data-rujeetjahagirdar/BlurImage/../lib/libgputk/lib -lgputk -lopencv_core -lopencv_imgproc -lopencv_highgui -lopencv_imgcodecs
